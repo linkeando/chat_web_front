@@ -1,7 +1,7 @@
 let URL_BACK_MESSAGE = 'https://chat-web-back.vercel.app';
 let SENDER = 'USER';
 
-function sendMessage(message) {
+function respuesta_mensaje(message) {
     console.log('entro')
     fetch(URL_BACK_MESSAGE, {
         method: 'POST',
@@ -52,7 +52,7 @@ function sendMessage() {
         'content': message,
         'hour': obtenerHoraActual()
     };
-    const answer = sendMessage(message_content)
+    const answer = receive_message(message_content)
     console.log(answer)
     /*if (message !== "") {
         var chatBox = document.getElementById("chat-box");
