@@ -52,7 +52,7 @@ function sendMessage() {
         'content': message,
         'hour': obtenerHoraActual()
     };
-    const answer = receive_message(message_content)
+    const answer = respuesta_mensaje(message_content)
     console.log(answer)
     /*if (message !== "") {
         var chatBox = document.getElementById("chat-box");
