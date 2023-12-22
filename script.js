@@ -1,4 +1,4 @@
-let URL_BACK_MESSAGE = 'https://mensajeandocongpt.vercel.app';
+let URL_BACK_MESSAGE = 'https://mensajeandocongptback.vercel.app/';
 let SENDER = 'USER';
 
 async function respuesta_mensaje(message) {
