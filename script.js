@@ -1,29 +1,26 @@
-let URL_BACK_MESSAGE = 'https://chat-web-back.vercel.app';
+let URL_BACK_MESSAGE = 'https://mensajeandocongpt.vercel.app';
 let SENDER = 'USER';
 
-function respuesta_mensaje(message) {
-    console.log('entro')
-    fetch(URL_BACK_MESSAGE, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: message }),
-    })
-    .then(response => {
+async function respuesta_mensaje(message) {
+    try {
+        const response = await fetch(URL_BACK_MESSAGE, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: message }),
+        });
+
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        return response.json(); // Si la respuesta es JSON
-    })
-    .then(data => {
-        // Manejar los datos recibidos después de enviar el mensaje
-        console.log(data);
-    })
-    .catch(error => {
-        // Manejar errores
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
         console.error('Error during fetch operation:', error);
-    });
+        throw error; // Re-lanza el error para que lo maneje el código que llama a esta función
+    }
 }
 
 
@@ -43,34 +40,42 @@ function obtenerHoraActual() {
     return `${horas}:${minutosFormateados} ${amPM}`;
 }
 
-
 function sendMessage() {
     var messageInput = document.getElementById("message-input");
     var message = messageInput.value.trim();
+
+    if (message !== "") {
+        obtenerRespuesta(message);
+    }
+
+    messageInput.value = "";
+}
+
+async function obtenerRespuesta(message) {
     let message_content = {
         'sender': SENDER,
         'content': message,
         'hour': obtenerHoraActual()
     };
-    const answer = respuesta_mensaje(message_content)
-    console.log(answer)
-    /*if (message !== "") {
+
+    try {
+
         var chatBox = document.getElementById("chat-box");
-        var newMessage = document.createElement("div");
-        // Verificar si el mensaje es del usuario o del bot
-        if (message.toLowerCase().startsWith("Bot:")) {
-            newMessage.className = "bot-message";
-        } else {
-            newMessage.className = "user-message";
-        }
+        var userMessage = document.createElement("div");
+        var botMessage = document.createElement("div");
 
-        newMessage.textContent = message;
-        chatBox.appendChild(newMessage);
+        userMessage.className = "user-message";
+        userMessage.textContent = message;
+        chatBox.appendChild(userMessage);
 
-        // Limpiar el input después de enviar el mensaje
-        messageInput.value = "";
+        const answer = await respuesta_mensaje(message_content);
 
-        // Hacer scroll hacia abajo para mostrar el nuevo mensaje
+        botMessage.className = "bot-message";
+        botMessage.textContent = answer.content;
+        chatBox.appendChild(botMessage);
+
         chatBox.scrollTop = chatBox.scrollHeight;
-    }*/
+    } catch (error) {
+        console.error('Error during sendMessage:', error);
+    }
 }
